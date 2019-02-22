@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.reactor.study.model.ApiSetting;
 
 @Configuration
-public class DemoRouterConfig {
+public class Routers {
 
 	@Bean
 	public RouterFunction<ServerResponse> routes() {

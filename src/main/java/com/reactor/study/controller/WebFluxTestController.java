@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reactor.study.model.ApiSetting;
@@ -76,8 +77,13 @@ public class WebFluxTestController {
 	}
 
 	@GetMapping("apiSettings")
-	public Flux<ApiSetting> getAllApiSettings() {
+	public Flux<ApiSetting> getAllApiSettings(@RequestParam String id) {
 		return apiService.getAllApiSettings();
+	}
+
+	@GetMapping("getApiSettingById")
+	public Mono<ApiSetting> getApiSetting(@RequestParam String id) {
+		return apiService.getApiSettingById(id);
 	}
 
 	@GetMapping("reduce")

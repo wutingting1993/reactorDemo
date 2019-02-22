@@ -9,18 +9,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.client.AsyncRestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 
+import com.reactor.study.config.MyClient;
 import com.reactor.study.model.ApiSetting;
 import com.reactor.study.repository.ApiRepository;
 import com.reactor.study.repository.ApiSettingRepository;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.MonoSink;
 
+@Slf4j
 @Service
 public class ApiService {
-	private WebClient webClient = WebClient.create("url");
+	@Autowired
+	private MyClient webClient;
+
+	private static ExchangeFilterFunction logRequest() {
+		return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+			log.info("Request: {} {}", clientRequest.method(), clientRequest.url());
+			clientRequest.headers().forEach((name, values) -> values.forEach(value -> log.info("{}={}", name, value)));
+			return Mono.just(clientRequest);
+		});
+	}
 
 	@Autowired
 	private ApiSettingRepository apiSettingRepository;
@@ -31,7 +43,7 @@ public class ApiService {
 	private AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
 
 	public Mono<ApiSetting> getApiSetting() {
-		return webClient.get().uri("/synchronizations?regionType=KR")
+		return webClient.getWebClient().get().uri("/synchronizations?regionType=KR")
 			.exchange().flatMap(clientResponse -> clientResponse.bodyToMono(ApiSetting.class));
 	}
 
@@ -64,9 +76,9 @@ public class ApiService {
 	}
 
 	public Mono<List> getApiSetting6() {
-		Mono<ApiSetting> mono1 = webClient.get().uri("/synchronizations?regionType=KR")
+		Mono<ApiSetting> mono1 = webClient.getWebClient().get().uri("/synchronizations?regionType=KR")
 			.exchange().flatMap(clientResponse -> clientResponse.bodyToMono(ApiSetting.class));
-		Mono<ApiSetting> mono2 = webClient.get().uri("/synchronizations?regionType=KR")
+		Mono<ApiSetting> mono2 = webClient.getWebClient().get().uri("/synchronizations?regionType=KR")
 			.exchange().flatMap(clientResponse -> clientResponse.bodyToMono(ApiSetting.class));
 
 		return Mono.zip(items -> {
@@ -80,9 +92,9 @@ public class ApiService {
 	}
 
 	public Mono<List> getApiSetting7() {
-		Mono<ApiSetting> mono1 = webClient.get().uri("/synchronizations?regionType=KR")
+		Mono<ApiSetting> mono1 = webClient.getWebClient().get().uri("/synchronizations?regionType=KR")
 			.exchange().flatMap(clientResponse -> clientResponse.bodyToMono(ApiSetting.class));
-		Mono<ApiSetting> mono2 = webClient.get().uri("/synchronizations?regionType=KR")
+		Mono<ApiSetting> mono2 = webClient.getWebClient().get().uri("/synchronizations?regionType=KR")
 			.exchange().flatMap(clientResponse -> clientResponse.bodyToMono(ApiSetting.class));
 
 		return Mono.zip(mono1, mono2).map(tuple -> {
@@ -113,5 +125,9 @@ public class ApiService {
 
 	public Flux<ApiSetting> getAllApiSettings() {
 		return apiRepository.findAll();
+	}
+
+	public Mono<ApiSetting> getApiSettingById(String id) {
+		return apiRepository.findById(id);
 	}
 }
