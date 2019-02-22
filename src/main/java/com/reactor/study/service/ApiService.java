@@ -12,7 +12,9 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.reactor.study.model.ApiSetting;
+import com.reactor.study.repository.ApiRepository;
 import com.reactor.study.repository.ApiSettingRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.MonoSink;
 
@@ -22,6 +24,9 @@ public class ApiService {
 
 	@Autowired
 	private ApiSettingRepository apiSettingRepository;
+
+	@Autowired
+	private ApiRepository apiRepository;
 
 	private AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
 
@@ -104,5 +109,9 @@ public class ApiService {
 				apiSettingMonoSink.success(apiSettingResponseEntity.getBody());
 			}
 		};
+	}
+
+	public Flux<ApiSetting> getAllApiSettings() {
+		return apiRepository.findAll();
 	}
 }

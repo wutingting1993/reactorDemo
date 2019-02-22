@@ -75,6 +75,10 @@ public class WebFluxTestController {
 		return apiService.getApiSetting8();
 	}
 
+	@GetMapping("apiSettings")
+	public Flux<ApiSetting> getAllApiSettings() {
+		return apiService.getAllApiSettings();
+	}
 
 	@GetMapping("reduce")
 	public Mono<String> reduce() {
