@@ -1,0 +1,45 @@
+{
+  "productIds": [
+    543543493
+  ],
+  "head": {
+    "cid": "09031036411932847970",
+    "ctok": "",
+    "cver": "1.0",
+    "lang": "01",
+    "sid": "8888",
+    "syscode": "09",
+    "auth": "",
+    "xsid": "",
+    "extension": [
+      {
+        "name": "webp",
+        "value": "1"
+      },
+      {
+        "name": "cityid",
+        "value": ""
+      },
+      {
+        "name": "platform",
+        "value": "pc"
+      },
+      {
+        "name": "source",
+        "value": "2"
+      },
+      {
+        "name": "pagecode",
+        "value": "10650016816"
+      },
+      {
+        "name": "module",
+        "value": "11"
+      },
+      {
+        "name": "terminaltype",
+        "value": "100"
+      }
+    ]
+  }
+}
