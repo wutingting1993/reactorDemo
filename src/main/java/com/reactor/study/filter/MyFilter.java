@@ -13,8 +13,9 @@ import reactor.core.publisher.Mono;
 public class MyFilter implements WebFilter {
 	@Override
 	public Mono<Void> filter(ServerWebExchange serverWebExchange, WebFilterChain webFilterChain) {
-		log.info(serverWebExchange.getRequest().getURI());
-
-		return webFilterChain.filter(serverWebExchange);
+		log.info("Request url:{}, formData：{}，QueryParams：{}", serverWebExchange.getRequest().getURI(), serverWebExchange.getFormData(), serverWebExchange.getRequest().getQueryParams());
+		Mono<Void> filter = webFilterChain.filter(serverWebExchange);
+		log.info("Response {}", serverWebExchange.getResponse());
+		return filter;
 	}
 }
